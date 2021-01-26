@@ -126,6 +126,13 @@ class GroupsController extends Controller
         ]);
 
         return redirect('/groups');
+        $cek = Groups::find($id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Groups Deleted',
+            'data' => $cek
+        ], 200);
     }
 
 }
