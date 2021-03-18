@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
 use App\Models\Groups;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -14,105 +13,78 @@ class GroupsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+{
         $groups = Groups::orderBy('id', 'desc')->paginate(3);
 
         return response()->json([
             'success' => true,
-            'message' => 'Daftar data groups',
-            'data' => $groups
+            'message'    => 'Daftar data grup teman',
+            'data'       => $groups
         ], 200);
-    } /**
+    }
+
+    /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
+     * 
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store (Request $request)
     {
-        $request->validate([
-            'name' => 'required|unique:groups|max:255',
-            'description' => 'required',
-        ]);
-
         $groups = Groups::create([
-            'name'=> $request->name,
-            'description' => $request->description
-            ]);
+            'id' => $request->id,
+            'name' => $request->name,
+            'description'=> $request->description,
 
-            if($groups)
-            {
+        ]);
+            if ($groups) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Groups berhasil di tambahkan',
-                    'data' => $groups
+                    'message'    => 'grup Berhasil di tambahkan',
+                    'data'       => $groups
                 ], 200);
-            }else{
+            }else {
                 return response()->json([
-                'success' => false,
-                'message' => 'Groups gagal di tambahkan',
-                'data' => $groups
-            ], 409);
+                    'success' => false,
+                    'message'    => 'group Gagal Ditambahkan ',
+                    'data'       => $groups
+                ], 409); 
             }
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show ($id)
     {
-        $group = Groups::where('id', $id)->first();    
-        return response()->json([
+        $group = Groups::where('id',$id)->first();
+        return response()-> json([
             'success' => true,
-            'message' => 'Detail Groups',
-            'data' => $group
-        ], 200);
+            'message'    => 'Detail Data group ',
+            'data'       => $group
+        ], 200); 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|unique:groups|max:255',
-            'description' => 'required',
-        ]);
+        public function update(Request $request, $id)
+        {
 
-        $g = Groups::find($id)->update([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Groups Updated',
-            'data' => $g
-        ], 200);
+            $group = Groups::find($id)->update([
+                'id' => $request->id,
+                'name' => $request->name,
+                'description' => $request->description
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data grup telah berhasil di rubah',
+                'data'    => $group
+            ], 200);
+        }
+        public function destroy($id)
+        {
+            $group = Groups::find($id)->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'data grup berhasil di hapus',
+                'data'    => $group
+            ], 200);
+        }
+
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {        
-        $cek = Groups::find($id)->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Groups Deleted',
-            'data' => $cek
-        ], 200);
-    }
-
-}
